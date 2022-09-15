@@ -4,7 +4,11 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
-        "Parens"
+        "baseui",
+        "Parens",
+        "signin",
+        "signup",
+        "Styletron"
     ],
     "ignoreWords": [],
     "import": []
