@@ -1,15 +1,29 @@
 import { Button } from 'baseui/button';
 import { FormControl } from 'baseui/form-control';
 import { Input } from 'baseui/input';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { handleUserSignIn } from '../../../api/auth/handleUserSignIn';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { setUserData, userData } from '../../../redux/slice/user.slice';
 import './styles.scss';
 import validateSignInData from './validateSignInData';
-import { Link } from 'react-router-dom';
 
 const SignIn = () => {
+    const dispatch = useAppDispatch();
+    const user = useAppSelector(userData);
+
     const [userDetails, setUserDetails] = useState(defaultUserDetails);
     const [formErrors, setFormErrors] =
         useState<formErrorsType>(defaultFormError);
+
+    useEffect(() => {
+        console.log({
+            user,
+        });
+
+        return () => {};
+    }, [user]);
 
     const handleFormChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -22,7 +36,9 @@ const SignIn = () => {
         });
     };
 
-    const handleFormSubmission = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleFormSubmission = async (
+        e: React.FormEvent<HTMLFormElement>
+    ) => {
         e.preventDefault();
 
         const { hasError, errors } = validateSignInData(userDetails);
@@ -33,6 +49,14 @@ const SignIn = () => {
             console.log({
                 userDetails,
             });
+
+            const response = await handleUserSignIn(userDetails);
+
+            console.log('Response is ', {
+                response,
+            });
+
+            dispatch(setUserData(response));
 
             setUserDetails(defaultUserDetails);
             setFormErrors(defaultFormError);
